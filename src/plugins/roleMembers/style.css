@@ -1,0 +1,87 @@
+/*
+ * Vencord, a Discord client mod
+ * Copyright (c) 2024 Vendicated and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+.vc-rolemembers-header {
+    flex: 1;
+}
+
+.vc-rolemembers-header-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.vc-rolemembers-role-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.vc-rolemembers-subtitle {
+    margin-top: 4px;
+}
+
+.vc-rolemembers-search {
+    padding: 0 16px 12px;
+}
+
+.vc-rolemembers-empty {
+    text-align: center;
+    padding: 40px 0;
+}
+
+.vc-rolemembers-scroller {
+    max-height: 400px;
+}
+
+.vc-rolemembers-row {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    gap: 12px;
+}
+
+.vc-rolemembers-row:hover {
+    background-color: var(--background-modifier-hover);
+}
+
+.vc-rolemembers-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.vc-rolemembers-row-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.vc-rolemembers-row-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.vc-rolemembers-back-button {
+    background: none;
+    border: none;
+    color: var(--interactive-normal);
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-right: 8px;
+}
+
+.vc-rolemembers-back-button:hover {
+    color: var(--interactive-hover);
+    background-color: var(--background-modifier-hover);
+}
