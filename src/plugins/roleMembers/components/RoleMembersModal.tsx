@@ -44,7 +44,7 @@ function RoleMembersModalComponent({ guildId, roleId, modalProps, onBack }: { gu
     }, [memberIds.length]);
 
     const members = useMemo(() => {
-        const result: Array<{ userId: string; nick: string | null; joinedAt: string | undefined; }> = [];
+        const result: Array<{ userId: string; nick: string | undefined; joinedAt: string | undefined; }> = [];
 
         for (const userId of memberIds) {
             const member = GuildMemberStore.getMember(guildId, userId);
@@ -139,7 +139,7 @@ function RoleMembersModalComponent({ guildId, roleId, modalProps, onBack }: { gu
     );
 }
 
-function MemberRow({ userId, nick, joinedAt, guildId }: { userId: string; nick: string | null; joinedAt: string | undefined; guildId: string; }) {
+function MemberRow({ userId, nick, joinedAt, guildId }: { userId: string; nick: string | undefined; joinedAt: string | undefined; guildId: string; }) {
     const user = UserStore.getUser(userId);
     if (!user) return null;
 
