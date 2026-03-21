@@ -62,7 +62,7 @@ export default definePlugin({
             find: "#{intl::GUILD_SETTINGS_EDIT_ROLE}",
             replacement: {
                 match: /onClick:(\i),/,
-                replace: "onClick:(e)=>{if(e.shiftKey){$self.onSettingsRoleClick(e,arguments[0]);return;}$1(e)},"
+                replace: "onClick:(e)=>{if(e.shiftKey){$self.onSettingsRoleClick(arguments[0]);return;}$1(e)},"
             }
         }
     ],
@@ -98,20 +98,17 @@ export default definePlugin({
                     (parent as any).__vcRoleMembersHandler = true;
 
                     parent.addEventListener("click", onClick as any, true);
-                }}
+            	    }}
             />
         );
     }, { noop: true }),
 
-    onSettingsRoleClick: ErrorBoundary.wrap(function (e: React.MouseEvent, props: any) {
-        const roleId = props?.role?.id;
-        const guildId = SelectedGuildStore.getGuildId();
-        if (!roleId || !guildId) return;
-
-        e.preventDefault();
-        e.stopPropagation();
-        openRoleMembersModal(guildId, roleId);
-    }, { noop: true }),
+    onSettingsRoleClick(props: any) {
+    const roleId = props?.role?.id;
+    const guildId = SelectedGuildStore.getGuildId();
+    if (!roleId || !guildId) return;
+    openRoleMembersModal(guildId, roleId);
+},
 
     contextMenus: {
         "dev-context": devContextMenuPatch,
