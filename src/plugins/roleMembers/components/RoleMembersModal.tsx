@@ -4,12 +4,10 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import "../style.css";
-
-import ErrorBoundary from "@components/ErrorBoundary";
 import { classNameFactory } from "@api/Styles";
+import ErrorBoundary from "@components/ErrorBoundary";
 import { ModalCloseButton, ModalContent, ModalHeader, ModalProps, ModalRoot, ModalSize, openModal } from "@utils/modal";
-import { FluxDispatcher, GuildMemberStore, GuildRoleStore, ScrollerThin, Text, TextInput, useEffect, useMemo, useState, useStateFromStores, UserStore } from "@webpack/common";
+import { FluxDispatcher, GuildMemberStore, GuildRoleStore, ScrollerThin, Text, TextInput, useEffect, useMemo, UserStore,useState, useStateFromStores } from "@webpack/common";
 
 const cl = classNameFactory("vc-rolemembers-");
 

@@ -4,10 +4,8 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import "../style.css";
-
-import ErrorBoundary from "@components/ErrorBoundary";
 import { classNameFactory } from "@api/Styles";
+import ErrorBoundary from "@components/ErrorBoundary";
 import { ModalCloseButton, ModalContent, ModalHeader, ModalProps, ModalRoot, ModalSize, openModal } from "@utils/modal";
 import { GuildRoleStore, GuildStore, ScrollerThin, Text, TextInput, useMemo, useState } from "@webpack/common";
 

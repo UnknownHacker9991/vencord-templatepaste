@@ -98,7 +98,7 @@ export default definePlugin({
                     (parent as any).__vcRoleMembersHandler = true;
 
                     parent.addEventListener("click", onClick as any, true);
-            	    }}
+                    }}
             />
         );
     }, { noop: true }),
@@ -116,4 +116,4 @@ export default definePlugin({
         "guild-header-popout": guildContextMenuPatch
     }
 });
- 
+
