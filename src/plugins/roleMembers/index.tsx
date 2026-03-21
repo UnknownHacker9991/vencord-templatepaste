@@ -9,6 +9,7 @@ import ErrorBoundary from "@components/ErrorBoundary";
 import { getCurrentGuild } from "@utils/discord";
 import definePlugin from "@utils/types";
 import { GuildRoleStore, Menu, SelectedGuildStore } from "@webpack/common";
+import { Devs } from "@utils/constants";
 
 import openAllRolesModal from "./components/AllRolesModal";
 import openRoleMembersModal from "./components/RoleMembersModal";
@@ -48,7 +49,7 @@ const guildContextMenuPatch: NavContextMenuPatchCallback = (children, { guild }:
 export default definePlugin({
     name: "RoleMembers",
     description: "Click role pills on profiles and in server settings to see a list of members with that role. Right click a server to view all roles.",
-    authors: [{ name: "UnknownHacker9991", id: 0n }],
+    authors: [Devs.UnknownHacker9991],
 
     patches: [
         {
