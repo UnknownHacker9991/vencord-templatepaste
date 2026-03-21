@@ -6,10 +6,10 @@
 
 import { NavContextMenuPatchCallback } from "@api/ContextMenu";
 import ErrorBoundary from "@components/ErrorBoundary";
+import { Devs } from "@utils/constants";
 import { getCurrentGuild } from "@utils/discord";
 import definePlugin from "@utils/types";
 import { GuildRoleStore, Menu, SelectedGuildStore } from "@webpack/common";
-import { Devs } from "@utils/constants";
 
 import openAllRolesModal from "./components/AllRolesModal";
 import openRoleMembersModal from "./components/RoleMembersModal";
