@@ -6,13 +6,13 @@
 
 import "./style.css";
 
-import { addChatBarButton, ChatBarButton, removeChatBarButton } from "@api/ChatButtons";
+import { ChatBarButton, ChatBarButtonFactory } from "@api/ChatButtons";
 import { findGroupChildrenByChildId, NavContextMenuPatchCallback } from "@api/ContextMenu";
 import { DataStore } from "@api/index";
 import { EquicordDevs } from "@utils/constants";
 import { openModal } from "@utils/modal";
 import definePlugin from "@utils/types";
-import { ChannelStore, GuildStore, Menu, UserStore } from "@webpack/common";
+import { ChannelStore, GuildStore, IconUtils, Menu, UserStore } from "@webpack/common";
 
 import { NotesModal } from "./components/NotesModal";
 import { SaveNoteModal } from "./components/SaveNoteModal";
@@ -66,7 +66,7 @@ function openSaveNoteModal(message: any) {
                     channelName: channel?.name ?? "Unknown",
                     authorId: message.author.id,
                     authorName: author?.globalName ?? message.author.username,
-                    authorAvatar: author?.getAvatarURL?.(guild?.id, 64) ?? "",
+                    authorAvatar: author ? IconUtils.getUserAvatarURL(author, false, 64) : "",
                     content: message.content ?? "",
                     tag,
                     savedAt: Date.now(),
@@ -84,7 +84,7 @@ function NotebookIcon() {
     );
 }
 
-const QuickNotesButton = ({ isMainChat }: { isMainChat: boolean; }) => {
+const QuickNotesButton: ChatBarButtonFactory = ({ isMainChat }) => {
     if (!isMainChat) return null;
 
     return (
@@ -143,11 +143,8 @@ export default definePlugin({
         "message": messageContextMenuPatch,
     },
 
-    start() {
-        addChatBarButton("QuickNotes", QuickNotesButton, NotebookIcon);
-    },
-
-    stop() {
-        removeChatBarButton("QuickNotes");
+    chatBarButton: {
+        icon: NotebookIcon,
+        render: QuickNotesButton,
     },
 });

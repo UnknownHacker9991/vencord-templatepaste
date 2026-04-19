@@ -9,7 +9,7 @@ import ErrorBoundary from "@components/ErrorBoundary";
 import { EquicordDevs } from "@utils/constants";
 import { getCurrentGuild } from "@utils/discord";
 import definePlugin from "@utils/types";
-import { GuildRoleStore, Menu, SelectedGuildStore } from "@webpack/common";
+import { GuildRoleStore, Menu, SelectedGuildStore, useEffect, useRef } from "@webpack/common";
 
 import openAllRolesModal from "./components/AllRolesModal";
 import openRoleMembersModal from "./components/RoleMembersModal";
@@ -69,47 +69,43 @@ export default definePlugin({
     ],
 
     RolePillClickWrapper: ErrorBoundary.wrap(({ guild }: { guild: { id: string; }; }) => {
-        if (!guild?.id) return null;
+        const anchorRef = useRef<HTMLSpanElement>(null);
 
-        const onClick = (e: React.MouseEvent<HTMLElement>) => {
-            if (e.button !== 0 || e.ctrlKey || e.shiftKey || e.metaKey || e.altKey) return;
+        useEffect(() => {
+            const parent = anchorRef.current?.parentElement;
+            if (!guild?.id || !parent) return;
 
-            let el = e.target as HTMLElement | null;
-            while (el && el !== e.currentTarget) {
-                const itemId = el.getAttribute("data-list-item-id");
-                if (itemId?.startsWith("roles-")) {
-                    const roleId = itemId.slice("roles-".length);
-                    if (roleId) {
-                        openRoleMembersModal(guild.id, roleId);
-                        return;
+            const onClick = (e: MouseEvent) => {
+                if (e.button !== 0 || e.ctrlKey || e.shiftKey || e.metaKey || e.altKey) return;
+
+                let el = e.target as HTMLElement | null;
+                while (el && el !== parent) {
+                    const itemId = el.getAttribute("data-list-item-id");
+                    if (itemId?.startsWith("roles-")) {
+                        const roleId = itemId.slice("roles-".length);
+                        if (roleId) {
+                            openRoleMembersModal(guild.id, roleId);
+                            return;
+                        }
                     }
+                    el = el.parentElement;
                 }
-                el = el.parentElement;
-            }
-        };
+            };
 
-        return (
-            <span
-                style={{ display: "none" }}
-                ref={el => {
-                    const parent = el?.parentElement;
-                    if (!parent) return;
+            parent.addEventListener("click", onClick, true);
+            return () => parent.removeEventListener("click", onClick, true);
+        }, [guild?.id]);
 
-                    if ((parent as any).__vcRoleMembersHandler) return;
-                    (parent as any).__vcRoleMembersHandler = true;
-
-                    parent.addEventListener("click", onClick as any, true);
-                    }}
-            />
-        );
+        if (!guild?.id) return null;
+        return <span ref={anchorRef} style={{ display: "none" }} />;
     }, { noop: true }),
 
     onSettingsRoleClick(props: any) {
-    const roleId = props?.role?.id;
-    const guildId = SelectedGuildStore.getGuildId();
-    if (!roleId || !guildId) return;
-    openRoleMembersModal(guildId, roleId);
-},
+        const roleId = props?.role?.id;
+        const guildId = SelectedGuildStore.getGuildId();
+        if (!roleId || !guildId) return;
+        openRoleMembersModal(guildId, roleId);
+    },
 
     contextMenus: {
         "dev-context": devContextMenuPatch,

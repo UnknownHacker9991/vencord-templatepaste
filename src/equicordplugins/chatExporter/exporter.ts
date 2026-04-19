@@ -4,6 +4,9 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+import { sleep } from "@utils/misc";
+import { saveFile } from "@utils/web";
+import { Embed, MessageAttachment, MessageReaction } from "@vencord/discord-types";
 import { Constants, RestAPI } from "@webpack/common";
 
 export interface ExportedMessage {
@@ -18,9 +21,9 @@ export interface ExportedMessage {
     };
     timestamp: string;
     edited_timestamp: string | null;
-    attachments: any[];
-    embeds: any[];
-    reactions: any[];
+    attachments: MessageAttachment[];
+    embeds: Embed[];
+    reactions: MessageReaction[];
     pinned: boolean;
     type: number;
 }
@@ -45,10 +48,6 @@ export interface ExportProgress {
 }
 
 type ProgressCallback = (progress: ExportProgress) => void;
-
-function delay(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
 
 export async function fetchMessages(
     options: ExportOptions,
@@ -79,7 +78,7 @@ export async function fetchMessages(
         } catch (e: any) {
             if (e?.status === 429) {
                 const retryAfter = e?.body?.retry_after ?? e?.headers?.get?.("retry-after") ?? 2;
-                await delay(Number(retryAfter) * 1000);
+                await sleep(Number(retryAfter) * 1000);
                 continue;
             }
             onProgress({
@@ -157,7 +156,7 @@ export async function fetchMessages(
 
         // Only delay if we got a full batch (more messages likely exist)
         if (!done && batch.length === 100) {
-            await delay(300);
+            await sleep(300);
         }
     }
 
@@ -174,13 +173,5 @@ export async function fetchMessages(
 }
 
 export function downloadFile(content: string, filename: string, mimeType: string) {
-    const blob = new Blob([content], { type: mimeType });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    saveFile(new File([content], filename, { type: mimeType }));
 }

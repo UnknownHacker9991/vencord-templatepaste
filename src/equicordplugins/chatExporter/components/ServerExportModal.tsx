@@ -4,9 +4,13 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+import { classNameFactory } from "@api/Styles";
 import { cancelServerJob, getServerJob, startServerExport, subscribe } from "@equicordplugins/chatExporter/exportManager";
 import { ModalContent, ModalFooter, ModalHeader, ModalProps, ModalRoot, ModalSize } from "@utils/modal";
+import { useForceUpdater } from "@utils/react";
 import { Button, ChannelStore, Forms, GuildChannelStore, Text, useEffect, useState } from "@webpack/common";
+
+const cl = classNameFactory("vc-chatexporter-");
 
 interface ServerExportModalProps {
     modalProps: ModalProps;
@@ -35,9 +39,9 @@ export function ServerExportModal({ modalProps, guildId, guildName }: ServerExpo
     const [format, setFormat] = useState<"html" | "json">("html");
     const [messageLimit, setMessageLimit] = useState<number | null>(1000);
     const [combineFiles, setCombineFiles] = useState(false);
-    const [, forceUpdate] = useState(0);
+    const forceUpdate = useForceUpdater();
 
-    useEffect(() => subscribe(() => forceUpdate(n => n + 1)), []);
+    useEffect(() => subscribe(forceUpdate), [forceUpdate]);
 
     const job = getServerJob(guildId);
     const progress = job?.progress ?? null;
@@ -163,11 +167,11 @@ export function ServerExportModal({ modalProps, guildId, guildName }: ServerExpo
                                 </Button>
                             </div>
                         </div>
-                        <div className="vc-chatexporter-channel-list">
+                        <div className={cl("channel-list")}>
                             {channels.map(ch => (
                                 <div
                                     key={ch.id}
-                                    className="vc-chatexporter-channel-item"
+                                    className={cl("channel-item")}
                                     onClick={() => !isExporting && toggleChannel(ch.id)}
                                 >
                                     <input
@@ -193,9 +197,9 @@ export function ServerExportModal({ modalProps, guildId, guildName }: ServerExpo
                                 {progress.status === "error" && `Error: ${progress.error}`}
                             </Text>
                             {(progress.status === "fetching" || progress.status === "rendering") && (
-                                <div className="vc-chatexporter-progress-bar">
+                                <div className={cl("progress-bar")}>
                                     <div
-                                        className="vc-chatexporter-progress-fill"
+                                        className={cl("progress-fill")}
                                         style={{ width: `${totalChannels ? (channelsDone / totalChannels) * 100 : 0}%` }}
                                     />
                                 </div>

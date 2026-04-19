@@ -4,10 +4,14 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+import { classNameFactory } from "@api/Styles";
 import { ExportOptions } from "@equicordplugins/chatExporter/exporter";
 import { cancelChannelJob, getChannelJob, startChannelExport, subscribe } from "@equicordplugins/chatExporter/exportManager";
 import { ModalContent, ModalFooter, ModalHeader, ModalProps, ModalRoot, ModalSize } from "@utils/modal";
+import { useForceUpdater } from "@utils/react";
 import { Button, Forms, Text, useEffect, useState } from "@webpack/common";
+
+const cl = classNameFactory("vc-chatexporter-");
 
 interface ExportModalProps {
     modalProps: ModalProps;
@@ -25,9 +29,9 @@ export function ExportModal({ modalProps, channelId, channelName, serverName }: 
     const [includePins, setIncludePins] = useState(true);
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
-    const [, forceUpdate] = useState(0);
+    const forceUpdate = useForceUpdater();
 
-    useEffect(() => subscribe(() => forceUpdate(n => n + 1)), []);
+    useEffect(() => subscribe(forceUpdate), [forceUpdate]);
 
     const job = getChannelJob(channelId);
     const progress = job?.progress ?? null;
@@ -193,17 +197,17 @@ export function ExportModal({ modalProps, channelId, channelName, serverName }: 
                                 {progress.status === "error" && `Error: ${progress.error}`}
                             </Text>
                             {progress.status === "fetching" && progress.total && (
-                                <div className="vc-chatexporter-progress-bar">
+                                <div className={cl("progress-bar")}>
                                     <div
-                                        className="vc-chatexporter-progress-fill"
+                                        className={cl("progress-fill")}
                                         style={{ width: `${progressPercent}%` }}
                                     />
                                 </div>
                             )}
                             {progress.status === "fetching" && !progress.total && (
-                                <div className="vc-chatexporter-progress-bar">
+                                <div className={cl("progress-bar")}>
                                     <div
-                                        className="vc-chatexporter-progress-fill"
+                                        className={cl("progress-fill")}
                                         style={{ width: "100%", opacity: 0.5 }}
                                     />
                                 </div>

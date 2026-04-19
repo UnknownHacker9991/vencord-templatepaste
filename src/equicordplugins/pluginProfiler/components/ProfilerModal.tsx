@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+import { isPluginEnabled, plugins } from "@api/PluginManager";
 import ErrorBoundary from "@components/ErrorBoundary";
 import { ModalCloseButton, ModalContent, ModalHeader, ModalProps, ModalRoot, ModalSize, openModal } from "@utils/modal";
 import { Text, TextInput, useMemo, useState } from "@webpack/common";
@@ -17,15 +18,16 @@ export interface PluginProfile {
     impactRating: "Low" | "Medium" | "High";
 }
 
+// Iterating every registered plugin is the profiler's job: we need each plugin's
+// patch count, context menus, flux subscriptions, etc. to compute an impact score.
+// `plugins` is the re-export from @api/PluginManager (which owns the registry),
+// so we go through the official boundary rather than `Vencord.Plugins.plugins`.
 export function collectPluginData(): PluginProfile[] {
-    const { plugins } = Vencord.Plugins;
-    const settings = Vencord.Settings.plugins;
     const profiles: PluginProfile[] = [];
 
     for (const name in plugins) {
+        if (!isPluginEnabled(name)) continue;
         const plugin = plugins[name];
-        const isEnabled = settings[name]?.enabled || plugin.required;
-        if (!isEnabled) continue;
 
         const patchCount = plugin.patches?.length ?? 0;
         const contextMenuCount = Object.keys(plugin.contextMenus ?? {}).length;
